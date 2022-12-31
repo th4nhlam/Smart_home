@@ -1,6 +1,6 @@
 import serial
 from datetime import datetime, timezone
-from gpiozero import AngularServo
+#from gpiozero import AngularServo
 from time import sleep
 import RPi.GPIO as GPIO
 def timestamp(dt):
@@ -11,7 +11,7 @@ ser = serial.Serial('/dev/ttyACM0',9600)
 s = [0,1]
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(25, GPIO.OUT)
-servo = AngularServo(25, min_angle=-180, max_angle=180)
+#servo = AngularServo(25, min_angle=-180, max_angle=180)
 while True:
     read_serial=ser.readline()
     value = int (ser.readline(),16)
@@ -21,11 +21,11 @@ while True:
 
     if (value>200):
         print(value)
-        servo.max()
+        #servo.max()
         sleep(2)
     else:
         print(value)
-        servo.min()
+        #servo.min()
         sleep(2)
 
         

@@ -1,15 +1,18 @@
-import RPi.GPIO as GPIO
+from gpiozero import AngularServo
 from time import sleep
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(25, GPIO.OUT)
-pwm=GPIO.PWM(25, 50)
-pwm.start(0)
-while True:
-    pwm.ChangeDutyCycle(5) # left -90 deg position
-    sleep(1)
-    pwm.ChangeDutyCycle(7.5) # neutral position
-    sleep(1)
-    pwm.ChangeDutyCycle(10) # right +90 deg position
-    sleep(1)    
+from gpiozero.pins.pigpio import PiGPIOFactory
+pigpio_factory = PiGPIOFactory()
+servo=AngularServo(21, min_pulse_width=0.0006, max_pulse_width=0.0023,pin_factory=pigpio_factory)
+
+
+while(True):
+    servo.angle=10
+    print("servo 10")
+    sleep(3)
+    
+    servo.angle=90
+    print("servo 90")
+    sleep(3)
+
 
     

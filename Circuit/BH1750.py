@@ -3,15 +3,17 @@ import time
 import json
 import requests
 import pyrebase
+import RPi.GPIO as GPIO
+from time import sleep
+GPIO.setmode(GPIO.BCM)
+led1=26
+led2=5
+led3=6
+
+#GPIO.setup(led2, GPIO.OUT)
+#GPIO.setup(led3, GPIO.OUT)
 # Define some constants from the datasheet
-config = {
-  "apiKey": "xpFpWOU99M28itFV7EiXuBUeMPe4SDUF8a90W3Lp",
-  "authDomain": "nha-thong-minh-pfiev.firebaseapp.com",
-  "databaseURL": "https://nha-thong-minh-pfiev-default-rtdb.asia-southeast1.firebasedatabase.app/",
-  "storageBucket": "nha-thong-minh-pfiev.appspot.com"
-}
-fb= pyrebase.initialize_app(config)
-db=fb.database();
+
 DEVICE     = 0x23 # Default device I2C address
 
 POWER_DOWN = 0x00 # No active state
@@ -51,16 +53,30 @@ def readLight(addr=DEVICE):
   data = bus.read_i2c_block_data(addr,CONTINUOUS_HIGH_RES_MODE_2,10);
   return convertToNumber(data)
 
+state=0
 def main():
-
+  global state
+  
   while True:
+    print(state)
     lightLevel=readLight()
     print("Light Level : " + format(lightLevel,'.2f') + " lx")
-    data={
-      "Lightlevel": format(lightLevel,'.2f')
-    }
-    db.child("Lightlevel").child().update(data);
-    time.sleep(0.5)
+    if(lightLevel>30 and state==1):
+      requests.get("http://127.0.0.1:8000/led1/off/")
+      state=0
+      print("tat den")
+    elif(lightLevel<30 and state==0):
+      requests.get("http://127.0.0.1:8000/led1/on/")
+      # sleep(3)
+      # requests.get("http://127.0.0.1:8000/led2/off/")
+      # sleep(3)
+      # requests.get("http://127.0.0.1:8000/led3/off/")
+      # sleep(3)
+      state=1
+      print("bat den")
+
+    sleep(1)
+    
 
 if __name__=="__main__":
    main()

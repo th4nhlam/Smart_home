@@ -1,9 +1,9 @@
 import time
 import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(21, GPIO.OUT)
+GPIO.setup(6, GPIO.OUT)
 
-p = GPIO.PWM(21, 50)  # channel=12 frequency=50Hz
+p = GPIO.PWM(6, 50)  # channel=12 frequency=50Hz
 p.start(0)
 try:
     while 1:
